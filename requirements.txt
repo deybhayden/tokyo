@@ -1,0 +1,2 @@
+git+ssh://git@github.com/statmuse/godzillops.git
+slackclient
