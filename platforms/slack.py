@@ -18,10 +18,15 @@ def main(config):
         while True:
             events = sc.rtm_read()
             for event in events:
-                if event['type'] == 'message' and event['user'] != config.SLACK_USER:
+                response_required = all([event['type'] == 'message',
+                                         event.get('text'),
+                                         event.get('user') != config.SLACK_USER])
+
+                if response_required:
                     logging.debug(event)
-                    response = gz_chat.respond(event['text'], context=event)
-                    sc.api_call(
-                        "chat.postMessage", channel=event['channel'], as_user=True,
-                        text=response
-                    )
+                    responses = gz_chat.respond(event['text'], context=event)
+                    for response in responses:
+                        sc.api_call(
+                            "chat.postMessage", channel=event['channel'], as_user=True,
+                            text=response
+                        )

@@ -13,6 +13,9 @@ def main(config, quit="quit"):
                 print(_input)
 
             if _input:
-                print(gz_chat.respond(_input))
+                responses = gz_chat.respond(_input)
+                for response in responses:
+                    print(response)
+
     except KeyboardInterrupt:
         print(quit)
