@@ -1,12 +1,15 @@
 #!/usr/bin/env python
+import logging
+import sys
 from importlib import import_module
 
-PLATFORM = 'text'
+import config
 
-# Set platform appropriate environment variables
-# import os
-# os.environ['SLACK_TOKEN'] = 'blah'
+# Set up Logger
+logging.basicConfig(format='%(asctime)s %(levelname)s:%(message)s',
+                    stream=sys.stdout,
+                    level=config.LOG_LEVEL)
 
 if __name__ == '__main__':
-    platform = import_module('platforms.'+PLATFORM)
-    platform.main()
+    platform = import_module('platforms.'+config.PLATFORM)
+    platform.main(config)

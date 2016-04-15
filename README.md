@@ -9,10 +9,12 @@ The [godzillops](https://github.com/statmuse/godzillops) chat bot runtime (assor
 ## Planned Platforms
 
 * Slack
+  * [python-slackclient](https://github.com/slackhq/python-slackclient) is required for this platform.
 
 ## Configure Platform Settings
 
-Edit `main.py` and set `PLATFORM` then the appropriate environment variables for each platform.
+Configure tokyo by editing the `config.py` file accordingly (set the appropriate values for your chat platform, etc.)
+  * You can also edit a file `config_private.py` which is a gitignore'd file but, if it exists, is used in place of config.py.
 
 ## Running
 

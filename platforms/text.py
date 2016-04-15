@@ -2,7 +2,7 @@ from godzillops.godzillops import Chat
 
 gz_chat = Chat()
 
-def main(quit="quit"):
+def main(config, quit="quit"):
     try:
         _input = ""
         while _input != quit:
