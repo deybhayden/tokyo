@@ -1,5 +1,6 @@
 import logging
 import sys
+import time
 
 from slackclient import SlackClient
 from godzillops.godzillops import Chat
@@ -30,3 +31,4 @@ def main(config):
                             "chat.postMessage", channel=event['channel'], as_user=True,
                             text=response
                         )
+            time.sleep(1)
