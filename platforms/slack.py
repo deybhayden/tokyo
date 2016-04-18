@@ -5,9 +5,9 @@ import time
 from slackclient import SlackClient
 from godzillops.godzillops import Chat
 
-gz_chat = Chat()
 
 def main(config):
+    gz_chat = Chat(config)
     if not config.SLACK_TOKEN or config.SLACK_TOKEN == 'yourtoken':
         sys.exit('Exiting... SLACK_TOKEN was empty or not updated from the default in config.py.')
 

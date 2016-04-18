@@ -1,3 +1,4 @@
 ../godzillops
 pudb
 slackclient
+ipython

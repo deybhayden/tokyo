@@ -1,8 +1,8 @@
 from godzillops.godzillops import Chat
 
-gz_chat = Chat()
 
 def main(config, quit="quit"):
+    gz_chat = Chat(config)
     try:
         _input = ""
         while _input != quit:
