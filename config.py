@@ -10,6 +10,8 @@ SLACK_USER_ID = "U12345678"
 # This should contain your Google Service Account key json file contents (downloaded when creating a google service account from the google developer console).
 # Paste the contents of the file here as a python dictionary.
 GOOGLE_SERVICE_ACCOUNT_JSON = {}
+# Email of super admin to act on the behalf of
+GOOGLE_SUPER_ADMIN = 'admin@example.com'
 
 if os.path.exists('config_private.py'):
     # Use config_private for your own personal settings - default to be git ignored.
