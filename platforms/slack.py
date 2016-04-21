@@ -34,6 +34,8 @@ def main(config):
                                     text=response
                                 )
                         except:
+                            # clear any action started
+                            gz_chat.cancel()
                             logging.exception("Error generated responding to < {} >.".format(event['text']))
                             sc.api_call(
                                 "chat.postMessage", channel=event['channel'], as_user=True,
@@ -41,5 +43,4 @@ def main(config):
                             )
                 time.sleep(1)
     except (KeyboardInterrupt):
-        sc.server.websocket.close()
         logging.info("Exiting...")

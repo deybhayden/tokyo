@@ -16,6 +16,8 @@ def main(config):
                     for response in responses:
                         print(response)
                 except:
+                    # clear any action started
+                    gz_chat.cancel()
                     logging.exception("Error generated responding to < {} >.".format(_input))
                     print("An error occurred - check the logs.")
 

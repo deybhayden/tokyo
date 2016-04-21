@@ -26,6 +26,14 @@ SLACK_USER_ID = "U12345678"
 GOOGLE_SERVICE_ACCOUNT_JSON = {}
 # Email of super admin to act on the behalf of
 GOOGLE_SUPER_ADMIN = 'admin@example.com'
+# Google Group Mapping. These should be the left side of the google group's
+# email address - i.e. dev of dev@example.com. GDES & GDEV are labels for
+# designer sounding or developer sounding titles (respectively). If all parts
+# of a job title make sense for this kind of label, Godzillops auto assigns groups upon user creation.
+GOOGLE_GROUPS = {
+    'GDES': ['design'],
+    'GDEV': ['dev']
+}
 
 if os.path.exists('config_private.py'):
     # Use config_private for your own personal settings - default to be git ignored.
