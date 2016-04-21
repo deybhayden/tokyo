@@ -26,9 +26,16 @@ def main(config):
                 if response_required:
                     logging.debug(event)
                     responses = gz_chat.respond(event['text'], context=event)
-                    for response in responses:
+                    try:
+                        for response in responses:
+                            sc.api_call(
+                                "chat.postMessage", channel=event['channel'], as_user=True,
+                                text=response
+                            )
+                    except:
+                        logging.exception("Error generated responding to < {} >.".format(event['text']))
                         sc.api_call(
                             "chat.postMessage", channel=event['channel'], as_user=True,
-                            text=response
+                            text="An error occurred - check the logs."
                         )
             time.sleep(1)

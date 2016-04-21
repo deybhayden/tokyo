@@ -1,3 +1,5 @@
+import logging
+
 from godzillops.godzillops import Chat
 
 
@@ -10,8 +12,12 @@ def main(config):
 
             if _input:
                 responses = gz_chat.respond(_input)
-                for response in responses:
-                    print(response)
+                try:
+                    for response in responses:
+                        print(response)
+                except:
+                    logging.exception("Error generated responding to < {} >.".format(_input))
+                    print("An error occurred - check the logs.")
 
     except (EOFError, KeyboardInterrupt):
         print("Exiting...")
