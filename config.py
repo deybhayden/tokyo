@@ -4,6 +4,9 @@ import logging
 LOG_LEVEL = logging.WARNING
 PLATFORM = "text"
 
+# URL used by GZ to return a random Godzilla GIF
+GZ_GIF_URL = "http://api.giphy.com/v1/gifs/search?q=godzilla&api_key=dc6zaTOxFJmzC"
+
 # === SLACK ===
 SLACK_TOKEN = "yourtoken"
 # Find the bot's Slack ID. You can obtain this using Slack's API tester - https://api.slack.com/methods/users.list
