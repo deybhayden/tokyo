@@ -45,6 +45,14 @@ TRELLO_API_KEY = 'yourkey'
 # Generate a token via an API call - http://stackoverflow.com/questions/17178907/how-to-get-a-permanent-user-token-for-writes-using-the-trello-api
 TRELLO_TOKEN = 'yourtoken'
 
+# === GITHUB ===
+# Org ID or name
+GITHUB_ORG = 'yourorg'
+# Generate a token - https://developer.github.com/v3/oauth_authorizations/#create-a-new-authorization
+# The necessary oauth scopes are: admin:org
+# Curl example: curl -u githubuser -X POST --data '{"scopes":["admin:org"], "note": "godzillops"}' https://api.github.com/authorizations
+GITHUB_ACCESS_TOKEN = 'yourtoken'
+
 if os.path.exists('config_private.py'):
     # Use config_private for your own personal settings - default to be git ignored.
     # Yup, intentionally using wildcard import to shadow the default values
