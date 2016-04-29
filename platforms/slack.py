@@ -1,9 +1,23 @@
 import logging
 import sys
 import time
+from functools import lru_cache
 
 from slackclient import SlackClient
 from godzillops.godzillops import Chat
+
+
+@lru_cache(maxsize=32)
+def get_user_info(sc, user):
+    """Cached `users.info` API calls to slack
+
+    We use the user info JSOn so we can know a user's timezone information.
+    """
+    response = sc.api_call('users.info', user='U0FJ09N73')
+    if response['ok']:
+        return response['user']
+    else:
+        raise ValueError('Getting user information died: ' + str(response))
 
 
 def main(config):
@@ -26,8 +40,12 @@ def main(config):
 
                     if response_required:
                         logging.debug(event)
+                        user = get_user_info(sc, event['user'])
                         text = event.pop('text')
-                        responses = gz_chat.respond(text, context=event)
+                        responses = gz_chat.respond(text, context={'user': user['id'],
+                                                                   'tz': user['tz'],
+                                                                   'tz_label': user['tz_label'],
+                                                                   'tz_offset': user['tz_offset']})
                         try:
                             for response in responses:
                                 sc.api_call(

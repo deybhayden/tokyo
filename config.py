@@ -4,6 +4,10 @@ import logging
 LOG_LEVEL = logging.WARNING
 PLATFORM = "text"
 
+# List of Admin user ids. Several actions are reserved for admin users.
+# Make sure to use appropriate user ids for your platform (slack user ids vs just text - which is text)
+ADMINS = ["text"]
+
 # URL used by GZ to return a random Godzilla GIF
 GZ_GIF_URL = "http://api.giphy.com/v1/gifs/search?q=godzilla&api_key=dc6zaTOxFJmzC"
 
