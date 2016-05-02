@@ -2,3 +2,4 @@
 slackclient==1.0.0
 pudb==2016.1
 ipython==4.1.2
+coverage==4.0.3

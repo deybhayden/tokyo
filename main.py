@@ -9,7 +9,9 @@ import config
 logging.basicConfig(format='%(asctime)s %(levelname)s:%(message)s',
                     stream=sys.stdout,
                     level=config.LOG_LEVEL)
+# Load Platform
+platform = import_module('platforms.'+config.PLATFORM)
 
 if __name__ == '__main__':
-    platform = import_module('platforms.'+config.PLATFORM)
+    # Launch platform with config
     platform.main(config)
