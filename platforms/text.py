@@ -1,6 +1,6 @@
 import logging
 
-from godzillops.godzillops import Chat
+from godzillops import Chat
 
 
 def main(config):

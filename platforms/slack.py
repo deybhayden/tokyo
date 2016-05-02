@@ -4,7 +4,7 @@ import time
 from functools import lru_cache
 
 from slackclient import SlackClient
-from godzillops.godzillops import Chat
+from godzillops import Chat
 
 
 @lru_cache(maxsize=32)
