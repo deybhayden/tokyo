@@ -1,5 +1,7 @@
 # :japanese_castle: tokyo :japanese_castle:
 
+[ ![Codeship Status for statmuse/tokyo](https://codeship.com/projects/23fd9150-f2cb-0133-5135-16a4a456a383/status?branch=master)](https://codeship.com/projects/149592)
+
 The [godzillops](https://github.com/statmuse/godzillops) chat bot runtime (assorted chat platform).
 
 ## Working Platforms
