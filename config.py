@@ -19,7 +19,7 @@ SLACK_USER_ID = "U12345678"
 
 # === GOOGLE ===
 # You'll need to create a google project from the Google Developer Console and enable the following APIs:
-# Admin SDK, Gmail API
+# Admin SDK, Gmail API, Calendar API
 # You then need to create a service account with domain delegation authority.
 # NOTE: Make sure that the service account's client
 # ID has been authorized to act with domain authority on the following scopes:
@@ -27,6 +27,7 @@ SLACK_USER_ID = "U12345678"
 # https://www.googleapis.com/auth/admin.directory.user
 # https://www.googleapis.com/auth/admin.directory.group
 # https://www.googleapis.com/auth/gmail.send
+# https://www.googleapis.com/auth/calendar
 # This should contain your Google Service Account key json file contents (downloaded when creating a google service account from the google developer console).
 # Paste the contents of the file here as a python dictionary.
 GOOGLE_SERVICE_ACCOUNT_JSON = {}
@@ -40,6 +41,8 @@ GOOGLE_GROUPS = {
     'GDES': ['design'],
     'GDEV': ['dev']
 }
+# Main company calendar to add new google users to as readers
+GOOGLE_CALENDAR_ID = 'cal-id@group.calendar.google.com'
 
 # === TRELLO ===
 # Org ID or name
