@@ -11,9 +11,9 @@ from godzillops import Chat
 def get_user_info(sc, user):
     """Cached `users.info` API calls to slack
 
-    We use the user info JSOn so we can know a user's timezone information.
+    We use the user info JSON so we can know a user's timezone information.
     """
-    response = sc.api_call('users.info', user='U0FJ09N73')
+    response = sc.api_call('users.info', user=user)
     if response['ok']:
         return response['user']
     else:

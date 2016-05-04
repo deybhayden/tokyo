@@ -41,8 +41,17 @@ clean-test:
 	rm -f .coverage
 	rm -fr htmlcov/
 
+install:
+	pip install --upgrade -r requirements.txt
+
+install-codeship: install
+	pip install coverage
+
+install-dev:
+	pip install --upgrade -r requirements_dev.txt
+
 lint:
-	flake8 --max-complexity=10 main.py platforms
+	flake8 --max-complexity=10 main.py platforms tests/test_*.py
 
 test:
 	python tests/test_*.py
@@ -51,7 +60,11 @@ test-all:
 	tox
 
 coverage:
-	coverage run --source main.py,platforms tests/test_*.py
+	coverage run --source main.py,platforms
 	coverage report -m
 	coverage html
 	$(BROWSER) htmlcov/index.html
+
+coverage-codeship:
+	coverage run --source main.py,platforms tests/test_*.py
+	coverage report -m --fail-under 100
