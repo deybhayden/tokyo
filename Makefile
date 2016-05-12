@@ -10,6 +10,7 @@ webbrowser.open("file://" + pathname2url(os.path.abspath(sys.argv[1])))
 endef
 export BROWSER_PYSCRIPT
 BROWSER := python -c "$$BROWSER_PYSCRIPT"
+PYTHON3 ?= /usr/local/bin/python3
 
 help:
 	@echo "clean - remove all build, test, coverage and Python artifacts"
@@ -23,6 +24,7 @@ help:
 clean: clean-build clean-pyc clean-test
 
 clean-build:
+	rm -fr .venv
 	rm -fr build/
 	rm -fr dist/
 	rm -fr .eggs/
@@ -39,27 +41,36 @@ clean-test:
 	rm -f .coverage
 	rm -fr htmlcov/
 
-install:
+install: clean
+	virtualenv --python $(PYTHON3) .venv
+	. .venv/bin/activate && \
 	pip install --upgrade -r requirements.txt
 
 install-codeship: install
+	. .venv/bin/activate && \
 	pip install coverage
 
-install-dev:
+install-dev: clean
+	virtualenv --python $(PYTHON3) .venv
+	. .venv/bin/activate && \
 	pip install --upgrade -r requirements_dev.txt
 
 lint:
+	. .venv/bin/activate && \
 	flake8 --max-complexity=10 main.py platforms tests/test_*.py
 
 test:
+	. .venv/bin/activate && \
 	python tests/test_*.py
 
 coverage:
-	coverage run --branch --source main.py,platforms tests/test_*.py
-	coverage report -m
-	coverage html
+	. .venv/bin/activate && \
+	coverage run --branch --source main.py,platforms tests/test_*.py && \
+	coverage report -m && \
+	coverage html && \
 	$(BROWSER) htmlcov/index.html
 
 coverage-codeship:
-	coverage run --branch --source main.py,platforms tests/test_*.py
+	. .venv/bin/activate && \
+	coverage run --branch --source main.py,platforms tests/test_*.py && \
 	coverage report -m --fail-under 100

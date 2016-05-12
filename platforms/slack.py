@@ -81,6 +81,7 @@ def main(config):
                                     if response['admin_action_complete']:
                                         other_admins = [a for a in config.ADMINS if a != user['id']]
                                         for admin_id in other_admins:
+                                            logging.info("Admin action completed - informing admin user {}".format(admin_id))
                                             dm_channel = open_im_channel(sc, admin_id)
                                             sc.api_call(
                                                 "chat.postMessage", channel=dm_channel, as_user=True,
