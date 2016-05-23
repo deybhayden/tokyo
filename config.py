@@ -62,6 +62,9 @@ GITHUB_ACCESS_TOKEN = 'yourtoken'
 # Team to invite new members to. Get this id by running `GET /orgs/:org/team` and
 # selecting the team's id you want to use
 GITHUB_TEAM = 1234567
+# Currently, GZ supports adding abacus users by posting to a Zapier webhook that is configured to
+# fire the 'Invite New User' Abacus action.
+ABACUS_ZAPIER_WEBHOOK = 'https://hooks.zapier.com/hooks/catch/asdf'
 
 if os.path.exists('config_private.py'):
     # Use config_private for your own personal settings - default to be git ignored.
