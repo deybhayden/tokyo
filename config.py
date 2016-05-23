@@ -39,7 +39,8 @@ GOOGLE_SUPER_ADMIN = 'admin@example.com'
 # of a job title make sense for this kind of label, Godzillops auto assigns groups upon user creation.
 GOOGLE_GROUPS = {
     'GDES': ['design'],
-    'GDEV': ['dev']
+    'GDEV': ['dev'],
+    'GMUL': ['multimedia']
 }
 # Main company calendar to add new google users to as readers
 GOOGLE_CALENDAR_ID = 'cal-id@group.calendar.google.com'
