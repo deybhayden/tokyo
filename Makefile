@@ -12,6 +12,18 @@ export BROWSER_PYSCRIPT
 BROWSER := python -c "$$BROWSER_PYSCRIPT"
 PYTHON3 ?= /usr/local/bin/python3
 
+ifeq ($(OS),Windows_NT)
+	CREATE_ENV := virtualenv env
+    RM := "rm" -rf
+    FIND := "C:\Program Files\Git\usr\bin\find.exe"
+	ENV := env\Scripts\\
+else
+	CREATE_ENV := virtualenv --python $(PYTHON3) env
+    ENV := env/bin/
+	RM := rm -rf
+	FIND := find
+endif
+
 help:
 	@echo "clean - remove all build, test, coverage and Python artifacts"
 	@echo "clean-build - remove build artifacts"
@@ -24,53 +36,47 @@ help:
 clean: clean-build clean-pyc clean-test
 
 clean-build:
-	rm -fr .venv
-	rm -fr build/
-	rm -fr dist/
-	rm -fr .eggs/
-	find . -name '*.egg-info' -exec rm -fr {} +
-	find . -name '*.egg' -exec rm -fr {} +
+	$(RM) env
+	$(RM) build
+	$(RM) dist
+	$(RM) .eggs
+	$(FIND) . -name '*.egg-info' -exec rm -fr {} +
+	$(FIND) . -name '*.egg' -exec rm -fr {} +
 
 clean-pyc:
-	find . -name '*.pyc' -exec rm -f {} +
-	find . -name '*.pyo' -exec rm -f {} +
-	find . -name '*~' -exec rm -f {} +
-	find . -name '__pycache__' -exec rm -fr {} +
+	$(FIND) . -name '*.pyc' -exec rm -f {} +
+	$(FIND) . -name '*.pyo' -exec rm -f {} +
+	$(FIND) . -name '*~' -exec rm -f {} +
+	$(FIND) . -name '__pycache__' -exec rm -fr {} +
 
 clean-test:
-	rm -f .coverage
-	rm -fr htmlcov/
+	$(RM) .coverage
+	$(RM) htmlcov
 
 install: clean
-	virtualenv --python $(PYTHON3) .venv
-	. .venv/bin/activate && \
-	pip install --upgrade -r requirements.txt
+	$(CREATE_ENV)
+	$(ENV)pip install --upgrade -r requirements.txt
 
 install-codeship: install
-	. .venv/bin/activate && \
-	pip install coverage
+	$(ENV)pip install coverage
 
 install-dev: clean
-	virtualenv --python $(PYTHON3) .venv
-	. .venv/bin/activate && \
-	pip install --upgrade -r requirements_dev.txt
+	$(CREATE_ENV)
+	$(ENV)pip install --upgrade -r requirements_dev.txt
 
 lint:
-	. .venv/bin/activate && \
-	flake8 --max-complexity=10 main.py platforms tests/test_*.py
+	$(ENV)flake8 --max-complexity=10 main.py platforms tests/test_*.py
 
 test:
-	. .venv/bin/activate && \
-	python tests/test_*.py
+	$(ENV)python tests/test_*.py
 
 coverage:
-	. .venv/bin/activate && \
-	coverage run --branch --source main.py,platforms tests/test_*.py && \
-	coverage report -m && \
-	coverage html && \
+	$(ENV)coverage run --branch --source main.py,platforms tests/test_*.py
+	$(ENV)coverage report -m
+	$(ENV)coverage html
 	$(BROWSER) htmlcov/index.html
 
 coverage-codeship:
-	. .venv/bin/activate && \
-	coverage run --branch --source main.py,platforms tests/test_*.py && \
-	coverage report -m --fail-under 100
+	
+	$(ENV)coverage run --branch --source main.py,platforms tests/test_*.py
+	$(ENV)coverage report -m --fail-under 100

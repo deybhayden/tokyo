@@ -1,3 +1,10 @@
+# Python Stuff
+env
+*.pyc
+
+# Private Settings
 config_private.py
+
+# Test stuff
 .coverage
 htmlcov
