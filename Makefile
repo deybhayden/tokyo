@@ -32,6 +32,8 @@ help:
 	@echo "lint - check style with flake8"
 	@echo "test - run tests quickly with the default Python"
 	@echo "coverage - check code coverage quickly with the default Python"
+	@echo "install - install tokyo's dependencies to the active Python's site-packages"
+	@echo "install-dev - install tokyo's dependencies to the active Python's site-packages plus debug tools for local development"
 
 clean: clean-build clean-pyc clean-test
 
