@@ -58,6 +58,7 @@ clean-test:
 install: clean
 	$(CREATE_ENV)
 	$(ENV)pip install --upgrade -r requirements.txt
+	$(ENV)python -m nltk.downloader names brown
 
 install-codeship: install
 	$(ENV)pip install coverage
@@ -65,6 +66,7 @@ install-codeship: install
 install-dev: clean
 	$(CREATE_ENV)
 	$(ENV)pip install --upgrade -r requirements_dev.txt
+	$(ENV)python -m nltk.downloader names brown
 
 lint:
 	$(ENV)flake8 --max-complexity=10 main.py platforms tests/test_*.py
@@ -79,6 +81,5 @@ coverage:
 	$(BROWSER) htmlcov/index.html
 
 coverage-codeship:
-	
 	$(ENV)coverage run --branch --source main.py,platforms tests/test_*.py
 	$(ENV)coverage report -m --fail-under 100
