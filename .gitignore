@@ -8,6 +8,3 @@ config_private.py
 # Test stuff
 .coverage
 htmlcov
-
-# vscode
-.vscode/settings.json
