@@ -1,4 +1,4 @@
 ../godzillops
 slackclient==1.0.0
 coverage==4.0.3
-flake8==2.4.1
+pylint==1.6.1

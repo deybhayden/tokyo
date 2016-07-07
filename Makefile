@@ -29,7 +29,7 @@ help:
 	@echo "clean-build - remove build artifacts"
 	@echo "clean-pyc - remove Python file artifacts"
 	@echo "clean-test - remove test and coverage artifacts"
-	@echo "lint - check style with flake8"
+	@echo "lint - check style with pylint"
 	@echo "test - run tests quickly with the default Python"
 	@echo "coverage - check code coverage quickly with the default Python"
 	@echo "install - install tokyo's dependencies to the active Python's site-packages"
@@ -69,7 +69,7 @@ install-dev: clean
 	$(ENV)python -m nltk.downloader names brown
 
 lint:
-	$(ENV)flake8 --max-complexity=10 main.py platforms tests/test_tokyo.py
+	$(ENV)pylint main.py platforms tests/test_tokyo.py
 
 test:
 	$(ENV)python tests/test_tokyo.py
