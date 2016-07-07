@@ -19,9 +19,9 @@ ifeq ($(OS),Windows_NT)
 	ENV := env\Scripts\\
 else
 	CREATE_ENV := virtualenv --python $(PYTHON3) env
-    ENV := env/bin/
 	RM := rm -rf
 	FIND := find
+    ENV := env/bin/
 endif
 
 help:
@@ -69,17 +69,17 @@ install-dev: clean
 	$(ENV)python -m nltk.downloader names brown
 
 lint:
-	$(ENV)flake8 --max-complexity=10 main.py platforms tests/test_*.py
+	$(ENV)flake8 --max-complexity=10 main.py platforms tests/test_tokyo.py
 
 test:
-	$(ENV)python tests/test_*.py
+	$(ENV)python tests/test_tokyo.py
 
 coverage:
-	$(ENV)coverage run --branch --source main.py,platforms tests/test_*.py
+	$(ENV)coverage run --branch --source main.py,platforms tests/test_tokyo.py
 	$(ENV)coverage report -m
 	$(ENV)coverage html
 	$(BROWSER) htmlcov/index.html
 
 coverage-codeship:
-	$(ENV)coverage run --branch --source main.py,platforms tests/test_*.py
+	$(ENV)coverage run --branch --source main.py,platforms tests/test_tokyo.py
 	$(ENV)coverage report -m --fail-under 100
