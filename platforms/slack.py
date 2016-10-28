@@ -88,13 +88,12 @@ def main(config):
                                                 text=response['message']
                                             )
                         except:
-                            # clear any action started
-                            gz_chat.cancel()
                             logging.exception("Error generated responding to < {} >.".format(text))
                             sc.api_call(
                                 "chat.postMessage", channel=event['channel'], as_user=True,
-                                text="An error occurred - check the logs."
+                                text="An error occurred - check the logs. Reinitializing GZ."
                             )
+                            gz_chat = Chat(config)
                 time.sleep(1)
         else:
             logging.error('Connecting to Slack failed... make sure the token is valid.')

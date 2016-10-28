@@ -61,9 +61,12 @@ GITHUB_ORG = 'yourorg'
 # The necessary oauth scopes are: admin:org
 # Curl example: curl -u githubuser -X POST --data '{"scopes":["admin:org"], "note": "godzillops"}' https://api.github.com/authorizations
 GITHUB_ACCESS_TOKEN = 'yourtoken'
-# Team to invite new members to. Get this id by running `GET /orgs/:org/team` and
-# selecting the team's id you want to use
-GITHUB_TEAM = 1234567
+# Dev roles with teams to invite new members to. Get this id by running `GET /orgs/:org/teams` and
+# selecting the team ids you want to use
+GITHUB_DEV_ROLES = {
+  'backend': [1234567, 8901234],
+  'frontend': [1234567]
+}
 # Currently, GZ supports adding abacus users by posting to a Zapier webhook that is configured to
 # fire the 'Invite New User' Abacus action.
 ABACUS_ZAPIER_WEBHOOK = 'https://hooks.zapier.com/hooks/catch/asdf'

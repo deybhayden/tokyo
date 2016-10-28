@@ -15,10 +15,9 @@ def main(config):
                     if isinstance(response, str):
                         print(response)
             except:
-                # clear any action started
-                gz_chat.cancel()
                 logging.exception("Error generated responding to < {} >.".format(_input))
-                print("An error occurred - check the logs.")
+                print("An error occurred - check the logs. Reinitializing GZ.")
+                gz_chat = Chat(config)
 
     except (EOFError, KeyboardInterrupt):
         print("Exiting...")
