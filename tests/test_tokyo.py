@@ -95,9 +95,8 @@ class TestPlatforms(unittest.TestCase):
 
         self.assertTrue(gz_chat_mock.called)
         gz_chat_mock().respond.assert_has_calls((call('Hey'), call('Bye')))
-        _builtins['print'].assert_has_calls((call('Huh?'), call('An error occurred - check the logs.'), call('Exiting...')))
+        _builtins['print'].assert_has_calls((call('Huh?'), call('An error occurred - check the logs. Reinitializing GZ.'), call('Exiting...')))
         self.logging_mock.exception.assert_called_with("Error generated responding to < Bye >.")
-        self.assertTrue(gz_chat_mock().cancel.called)
 
     def test_002_slack_chat_successful(self):
         """Make sure we initialized a slack Chat platform without exception."""
@@ -213,7 +212,7 @@ class TestPlatforms(unittest.TestCase):
         slack_events = [[{'type': 'message', 'text': 'What?', 'channel': self.channel, 'user': self.user_id}],
                         [{'type': 'message', 'text': 'Huh?', 'channel': self.channel, 'user': self.config.SLACK_USER}],
                         [{'type': 'message', 'text': 'Okay?', 'channel': self.channel, 'user': self.user_id}],
-                        [{'type': 'message', 'text': 'An error occurred - check the logs.', 'channel': self.channel, 'user': self.config.SLACK_USER}],
+                        [{'type': 'message', 'text': 'An error occurred - check the logs. Reinitializing GZ.', 'channel': self.channel, 'user': self.config.SLACK_USER}],
                         KeyboardInterrupt()]
         slack_mock().rtm_read = Mock(side_effect=slack_events)
         user_info = {'ok': True, 'user': {'id': self.user_id, 'tz': 'America/Chicago',
@@ -237,9 +236,8 @@ class TestPlatforms(unittest.TestCase):
         gz_chat_mock().respond.assert_has_calls((call('What?', context=context),
                                                  call('Okay?', context=context)))
         post_message_mock.assert_has_calls((call(text='Huh?', channel=self.channel, as_user=True),
-                                            call(text='An error occurred - check the logs.', channel=self.channel, as_user=True)))
+                                            call(text='An error occurred - check the logs. Reinitializing GZ.', channel=self.channel, as_user=True)))
         self.logging_mock.exception.assert_called_with("Error generated responding to < Okay? >.")
-        self.assertTrue(gz_chat_mock().cancel.called)
 
     def test_007_slack_open_im_channel_dies(self):
         """Handle open_im_channel api call death in slack Chat platform."""
@@ -275,9 +273,8 @@ class TestPlatforms(unittest.TestCase):
         user_info_mock.assert_called_with(user=self.user_id)
         im_open_mock.assert_called_with(user=other_user_id)
         self.logging_mock.exception.assert_called_with("Error generated responding to < What? >.")
-        self.assertTrue(gz_chat_mock().cancel.called)
         self.assertTrue(gz_chat_mock().respond.called)
-        post_message_mock.assert_called_with(text='An error occurred - check the logs.', channel=self.channel, as_user=True)
+        post_message_mock.assert_called_with(text='An error occurred - check the logs. Reinitializing GZ.', channel=self.channel, as_user=True)
 
 
 if __name__ == '__main__':
