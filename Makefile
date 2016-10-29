@@ -59,7 +59,7 @@ clean-test:
 install: clean
 	$(CREATE_ENV)
 	$(ENV)pip install --upgrade -r requirements.txt
-	$(ENV)python -m nltk.downloader names brown
+	$(ENV)python -m nltk.downloader brown
 
 install-codeship: install
 	$(ENV)pip install coverage
