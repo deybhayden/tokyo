@@ -67,7 +67,7 @@ install-codeship: install
 install-dev: clean
 	$(CREATE_ENV)
 	$(ENV)pip install --upgrade -r requirements_dev.txt
-	$(ENV)python -m nltk.downloader names brown
+	$(ENV)python -m nltk.downloader brown
 
 lint:
 	$(ENV)pylint main.py platforms tests/test_tokyo.py

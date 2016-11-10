@@ -45,6 +45,8 @@ GOOGLE_GROUPS = {
 GOOGLE_DEV_ROLES = ['backend', 'frontend']
 # Main company calendar to add new google users to as readers
 GOOGLE_CALENDAR_ID = 'cal-id@group.calendar.google.com'
+# Custom Welcome email text that can be configured
+GOOGLE_WELCOME_TEXT = ''
 
 # === TRELLO ===
 # Org ID or name
@@ -64,8 +66,8 @@ GITHUB_ACCESS_TOKEN = 'yourtoken'
 # Dev roles with teams to invite new members to. Get this id by running `GET /orgs/:org/teams` and
 # selecting the team ids you want to use
 GITHUB_DEV_ROLES = {
-  'backend': [1234567, 8901234],
-  'frontend': [1234567]
+    'backend': [1234567, 8901234],
+    'frontend': [1234567]
 }
 # Currently, GZ supports adding abacus users by posting to a Zapier webhook that is configured to
 # fire the 'Invite New User' Abacus action.
