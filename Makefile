@@ -61,9 +61,6 @@ install: clean
 	$(ENV)pip install --upgrade -r requirements.txt
 	$(ENV)python -m nltk.downloader brown
 
-install-codeship: install
-	$(ENV)pip install coverage
-
 install-dev: clean
 	$(CREATE_ENV)
 	$(ENV)pip install --upgrade -r requirements_dev.txt
@@ -80,7 +77,3 @@ coverage:
 	$(ENV)coverage report -m
 	$(ENV)coverage html
 	$(BROWSER) htmlcov/index.html
-
-coverage-codeship:
-	$(ENV)coverage run --branch --source main.py,platforms tests/test_tokyo.py
-	$(ENV)coverage report -m --fail-under 100

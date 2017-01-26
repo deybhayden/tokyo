@@ -1,0 +1,23 @@
+version: 0.1
+
+environment_variables:
+  plaintext:
+    PYTHON3: "/usr/bin/python3"
+    BUCKET: "s3://codepipeline-us-east-1-965432499980"
+
+phases:
+  install:
+    commands:
+      - aws configure set s3.signature_version s3v4
+      - LATEST_GZ=`aws s3 ls $BUCKET/godzillops/MyApp/ --recursive | sort | tail -n 1 | awk '{print $4}'` && aws s3 cp $BUCKET/$LATEST_GZ ./latest-gz.zip && pip install slackclient==1.0.0 coverage==4.0.3 ./latest-gz.zip
+      - python -m nltk.downloader brown
+  build:
+    commands:
+      - coverage run --branch --source main.py,platforms tests/test_tokyo.py
+      - coverage report -m --fail-under 100
+
+artifacts:
+  files:
+    - "deploy/*"
+  discard-paths: yes
+
