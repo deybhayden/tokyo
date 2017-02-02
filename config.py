@@ -40,7 +40,8 @@ GOOGLE_SUPER_ADMIN = 'admin@example.com'
 GOOGLE_GROUPS = {
     'GDES': ['design'],
     'GDEV': ['dev'],
-    'GCRE': ['creatives']
+    'GCRE': ['creatives'],
+    'GFOU': ['founders']
 }
 GOOGLE_DEV_ROLES = ['backend', 'frontend']
 # Main company calendar to add new google users to as readers
