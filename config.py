@@ -48,6 +48,7 @@ GOOGLE_DEV_ROLES = ['backend', 'frontend']
 GOOGLE_CALENDAR_ID = 'cal-id@group.calendar.google.com'
 # Custom Welcome email text that can be configured
 GOOGLE_WELCOME_TEXT = ''
+GOOGLE_WELCOME_ATTACHMENTS = []
 
 # === TRELLO ===
 # Org ID or name
