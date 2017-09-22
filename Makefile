@@ -11,15 +11,11 @@ export BROWSER_PYSCRIPT
 BROWSER := python -c "$$BROWSER_PYSCRIPT"
 
 ifeq ($(OS),Windows_NT)
-	CREATE_ENV := virtualenv env
 	RM := "rm" -rf
 	FIND := "C:\Program Files\Git\usr\bin\find.exe"
-	ENV := env\Scripts\\
 else
-	CREATE_ENV := virtualenv --python python3 env
 	RM := rm -rf
 	FIND := find
-	ENV := env/bin/
 endif
 
 .PHONY: clean-pyc clean-build clean
@@ -38,7 +34,7 @@ help:
 clean: clean-build clean-pyc clean-test
 
 clean-build:
-	$(RM) env
+	pyenv uninstall -f tokyo
 	$(RM) build
 	$(RM) dist
 	$(RM) .eggs
@@ -56,23 +52,23 @@ clean-test:
 	$(RM) htmlcov
 
 install: clean
-	$(CREATE_ENV)
-	$(ENV)pip install --upgrade -r requirements.txt
-	$(ENV)python -m nltk.downloader brown
+	pyenv virtualenv 3.4.3 tokyo
+	pip install --upgrade -r requirements.txt
+	python -m nltk.downloader brown
 
 install-dev: clean
-	$(CREATE_ENV)
-	$(ENV)pip install --upgrade -r requirements_dev.txt
-	$(ENV)python -m nltk.downloader brown
+	pyenv virtualenv 3.4.3 tokyo
+	pip install --upgrade -r requirements_dev.txt
+	python -m nltk.downloader brown
 
 lint:
-	$(ENV)pylint main.py platforms tests/test_tokyo.py
+	pylint main.py platforms tests/test_tokyo.py
 
 test:
-	$(ENV)python tests/test_tokyo.py
+	python tests/test_tokyo.py
 
 coverage:
-	$(ENV)coverage run --branch --source main.py,platforms tests/test_tokyo.py
-	$(ENV)coverage report -m
-	$(ENV)coverage html
+	coverage run --branch --source main.py,platforms tests/test_tokyo.py
+	coverage report -m
+	coverage html
 	$(BROWSER) htmlcov/index.html

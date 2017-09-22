@@ -1,6 +1,6 @@
 ../godzillops
 slackclient==1.0.0
-coverage==4.0.3
-pylint==1.6.1
-flake8==3.0.4
-pudb==2016.2
+ipython
+coverage
+pylint
+pudb
