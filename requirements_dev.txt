@@ -4,3 +4,4 @@ ipython
 coverage
 pylint
 pudb
+nose
