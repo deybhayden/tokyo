@@ -37,12 +37,7 @@ GOOGLE_SUPER_ADMIN = 'admin@example.com'
 # email address - i.e. dev of dev@example.com. GDES & GDEV are labels for
 # designer sounding or developer sounding titles (respectively). If all parts
 # of a job title make sense for this kind of label, Godzillops auto assigns groups upon user creation.
-GOOGLE_GROUPS = {
-    'GDES': ['design'],
-    'GDEV': ['dev'],
-    'GCRE': ['creatives'],
-    'GFOU': ['founders']
-}
+GOOGLE_GROUPS = {'GDES': ['design'], 'GDEV': ['dev'], 'GCRE': ['creatives'], 'GFOU': ['founders']}
 GOOGLE_DEV_ROLES = ['backend', 'frontend']
 # Main company calendar to add new google users to as readers
 GOOGLE_CALENDAR_ID = 'cal-id@group.calendar.google.com'
@@ -67,10 +62,7 @@ GITHUB_ORG = 'yourorg'
 GITHUB_ACCESS_TOKEN = 'yourtoken'
 # Dev roles with teams to invite new members to. Get this id by running `GET /orgs/:org/teams` and
 # selecting the team ids you want to use
-GITHUB_DEV_ROLES = {
-    'backend': [1234567, 8901234],
-    'frontend': [1234567]
-}
+GITHUB_DEV_ROLES = {'backend': [1234567, 8901234], 'frontend': [1234567]}
 # Currently, GZ supports adding abacus users by posting to a Zapier webhook that is configured to
 # fire the 'Invite New User' Abacus action.
 ABACUS_ZAPIER_WEBHOOK = 'https://hooks.zapier.com/hooks/catch/asdf'

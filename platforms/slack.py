@@ -59,9 +59,11 @@ def main(config):
             while True:
                 events = sc.rtm_read()
                 for event in events:
-                    response_required = all([event['type'] == 'message',
-                                             event.get('text'),
-                                             event.get('user') != config.SLACK_USER])
+                    response_required = all([
+                        event['type'] == 'message',
+                        event.get('text'),
+                        event.get('user') != config.SLACK_USER
+                    ])
 
                     if response_required:
                         logging.debug(event)
@@ -73,26 +75,31 @@ def main(config):
                                 if isinstance(response, str):
                                     # Text is just feedback/chat from GZ
                                     sc.api_call(
-                                        "chat.postMessage", channel=event['channel'], as_user=True,
-                                        text=response
-                                    )
+                                        "chat.postMessage",
+                                        channel=event['channel'],
+                                        as_user=True,
+                                        text=response)
                                 elif isinstance(response, dict):
                                     # A dictionary represents a completed action (successful or failed)
                                     if response['admin_action_complete']:
                                         other_admins = [a for a in config.ADMINS if a != user['id']]
                                         for admin_id in other_admins:
-                                            logging.info("Admin action completed - informing admin user {}".format(admin_id))
+                                            logging.info(
+                                                "Admin action completed - informing admin user {}".
+                                                format(admin_id))
                                             dm_channel = open_im_channel(sc, admin_id)
                                             sc.api_call(
-                                                "chat.postMessage", channel=dm_channel, as_user=True,
-                                                text=response['message']
-                                            )
+                                                "chat.postMessage",
+                                                channel=dm_channel,
+                                                as_user=True,
+                                                text=response['message'])
                         except:
                             logging.exception("Error generated responding to < {} >.".format(text))
                             sc.api_call(
-                                "chat.postMessage", channel=event['channel'], as_user=True,
-                                text="An error occurred - check the logs. Reinitializing GZ."
-                            )
+                                "chat.postMessage",
+                                channel=event['channel'],
+                                as_user=True,
+                                text="An error occurred - check the logs. Reinitializing GZ.")
                             gz_chat = Chat(config)
                 time.sleep(1)
         else:

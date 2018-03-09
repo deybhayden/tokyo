@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-
 """
 test_tokyo
 ----------------------------------
@@ -34,11 +33,11 @@ def _slack_api_call_builder(mocks):
     def api_call_mock(*args, **kwargs):
         api_call = args[0]
         return mocks.get(api_call, Mock(name=api_call))(*args[1:], **kwargs)
+
     return api_call_mock
 
 
 class TestPlatforms(unittest.TestCase):
-
     def setUp(self):
         """setUp runs before every test is executed.
 
@@ -47,9 +46,11 @@ class TestPlatforms(unittest.TestCase):
         # == Override existing config with test config ==
         self.config = reload(config_test)
         self.logging_mock = Mock(name='logging')
-        self.modules_patch = patch.dict('sys.modules', {'config': self.config,
-                                                        'logging': self.logging_mock,
-                                                        'time': Mock()})
+        self.modules_patch = patch.dict('sys.modules', {
+            'config': self.config,
+            'logging': self.logging_mock,
+            'time': Mock()
+        })
         self.modules_patch.start()
 
         # Used in slack test methods
@@ -62,12 +63,12 @@ class TestPlatforms(unittest.TestCase):
     def test_000_text_chat_successful(self):
         """Make sure we initialized a text Chat platform without exception."""
         gz_chat_mock = Mock(name='godzillops.Chat')
-        gz_chat_mock().respond = Mock(return_value=resp_generator(('Hi', 'Can I help you with anything?',
-                                                                   {'admin_action_complete': False, 'message': 'Command completed.'})))
-        _builtins = {
-            'print': Mock(),
-            'input': Mock(side_effect=['Hey', 'Bye', EOFError('FIN')])
-        }
+        gz_chat_mock().respond = Mock(
+            return_value=resp_generator(('Hi', 'Can I help you with anything?', {
+                'admin_action_complete': False,
+                'message': 'Command completed.'
+            })))
+        _builtins = {'print': Mock(), 'input': Mock(side_effect=['Hey', 'Bye', EOFError('FIN')])}
 
         with patch('godzillops.Chat', gz_chat_mock):
             with patch.multiple('builtins', **_builtins):
@@ -78,16 +79,16 @@ class TestPlatforms(unittest.TestCase):
 
         self.assertTrue(gz_chat_mock.called)
         gz_chat_mock().respond.assert_has_calls((call('Hey'), call('Bye')))
-        _builtins['print'].assert_has_calls((call('Hi'), call('Can I help you with anything?'), call('Exiting...')))
+        _builtins['print'].assert_has_calls((call('Hi'), call('Can I help you with anything?'),
+                                             call('Exiting...')))
 
     def test_001_text_chat_respond_exception(self):
         """Force an exception on respond in text Chat platform."""
         gz_chat_mock = Mock(name='godzillops.Chat')
-        gz_chat_mock().respond = Mock(side_effect=[resp_generator(('Huh?',)), resp_generator((ValueError('BOOM'),))])
-        _builtins = {
-            'print': Mock(),
-            'input': Mock(side_effect=['Hey', 'Bye', EOFError('FIN')])
-        }
+        gz_chat_mock().respond = Mock(
+            side_effect=[resp_generator((
+                'Huh?', )), resp_generator((ValueError('BOOM'), ))])
+        _builtins = {'print': Mock(), 'input': Mock(side_effect=['Hey', 'Bye', EOFError('FIN')])}
 
         with patch('godzillops.Chat', gz_chat_mock):
             with patch.multiple('builtins', **_builtins):
@@ -95,7 +96,9 @@ class TestPlatforms(unittest.TestCase):
 
         self.assertTrue(gz_chat_mock.called)
         gz_chat_mock().respond.assert_has_calls((call('Hey'), call('Bye')))
-        _builtins['print'].assert_has_calls((call('Huh?'), call('An error occurred - check the logs. Reinitializing GZ.'), call('Exiting...')))
+        _builtins['print'].assert_has_calls(
+            (call('Huh?'), call('An error occurred - check the logs. Reinitializing GZ.'),
+             call('Exiting...')))
         self.logging_mock.exception.assert_called_with("Error generated responding to < Bye >.")
 
     def test_002_slack_chat_successful(self):
@@ -105,26 +108,51 @@ class TestPlatforms(unittest.TestCase):
         self.config.ADMINS = [self.user_id, other_user_id]
 
         slack_mock = Mock(name='slackclient')
-        slack_events = [[{'type': 'message', 'text': 'What?', 'channel': self.channel, 'user': self.user_id}],
-                        [{'type': 'message', 'text': 'Huh?', 'channel': self.channel, 'user': self.config.SLACK_USER}],
-                        [{'type': 'message', 'text': 'Okay?', 'channel': self.channel, 'user': self.user_id}],
+        slack_events = [[{
+            'type': 'message',
+            'text': 'What?',
+            'channel': self.channel,
+            'user': self.user_id
+        }], [{
+            'type': 'message',
+            'text': 'Huh?',
+            'channel': self.channel,
+            'user': self.config.SLACK_USER
+        }], [{
+            'type': 'message',
+            'text': 'Okay?',
+            'channel': self.channel,
+            'user': self.user_id
+        }],
                         KeyboardInterrupt()]
         slack_mock().rtm_read = Mock(side_effect=slack_events)
-        user_info = {'ok': True, 'user': {'id': self.user_id, 'tz': 'America/Chicago',
-                                          'tz_label': 'Central Daylight Time', 'tz_offset': -18000}}
+        user_info = {
+            'ok': True,
+            'user': {
+                'id': self.user_id,
+                'tz': 'America/Chicago',
+                'tz_label': 'Central Daylight Time',
+                'tz_offset': -18000
+            }
+        }
         user_info_mock = Mock(name='users.info', return_value=user_info)
-        im_open = {'already_open': True, 'channel': {'id': 'D11111111'},
-                   'no_op': True, 'ok': True}
+        im_open = {'already_open': True, 'channel': {'id': 'D11111111'}, 'no_op': True, 'ok': True}
         im_open_mock = Mock(name='im.open', return_value=im_open)
         post_message_mock = Mock(name='chat.postMessage')
-        slack_mock().api_call = _slack_api_call_builder({'users.info': user_info_mock,
-                                                         'im.open': im_open_mock,
-                                                         'chat.postMessage': post_message_mock})
+        slack_mock().api_call = _slack_api_call_builder({
+            'users.info': user_info_mock,
+            'im.open': im_open_mock,
+            'chat.postMessage': post_message_mock
+        })
         gz_chat_mock = Mock(name='godzillops.Chat')
-        gz_chat_mock().respond = Mock(return_value=resp_generator(('Huh?',
-                                                                   {'admin_action_complete': False, 'message': 'Command completed.'},
-                                                                   {'admin_action_complete': True, 'message': 'Admin Command completed.'},
-                                                                   False)))
+        gz_chat_mock().respond = Mock(
+            return_value=resp_generator(('Huh?', {
+                'admin_action_complete': False,
+                'message': 'Command completed.'
+            }, {
+                'admin_action_complete': True,
+                'message': 'Admin Command completed.'
+            }, False)))
 
         with patch('slackclient.SlackClient', slack_mock):
             with patch('godzillops.Chat', gz_chat_mock):
@@ -136,11 +164,21 @@ class TestPlatforms(unittest.TestCase):
         self.assertTrue(slack_mock().rtm_read.called)
         user_info_mock.assert_called_with(user=self.user_id)
         im_open_mock.assert_called_with(user=other_user_id)
-        context = {'user': {'tz_label': 'Central Daylight Time', 'tz': 'America/Chicago', 'id': self.user_id, 'tz_offset': -18000}}
+        context = {
+            'user': {
+                'tz_label': 'Central Daylight Time',
+                'tz': 'America/Chicago',
+                'id': self.user_id,
+                'tz_offset': -18000
+            }
+        }
         gz_chat_mock().respond.assert_has_calls((call('What?', context=context),
                                                  call('Okay?', context=context)))
         post_message_mock.assert_has_calls((call(text='Huh?', channel=self.channel, as_user=True),
-                                            call(text='Admin Command completed.', channel=im_open['channel']['id'], as_user=True)))
+                                            call(
+                                                text='Admin Command completed.',
+                                                channel=im_open['channel']['id'],
+                                                as_user=True)))
 
     def test_003_slack_chat_invalid_token(self):
         """Make sure slack Chat platform dies with an invalid token."""
@@ -173,7 +211,8 @@ class TestPlatforms(unittest.TestCase):
         self.assertTrue(gz_chat_mock.called)
         self.assertTrue(slack_mock.called)
         self.assertFalse(slack_mock().rtm_read.called)
-        self.logging_mock.error.assert_called_with("Connecting to Slack failed... make sure the token is valid.")
+        self.logging_mock.error.assert_called_with(
+            "Connecting to Slack failed... make sure the token is valid.")
 
     def test_005_slack_get_user_info_dies(self):
         """Handle get_user_info api call death in slack Chat platform."""
@@ -181,14 +220,22 @@ class TestPlatforms(unittest.TestCase):
 
         slack_mock = Mock(name='slackclient')
         user_not_found = 'User {} not found'.format(self.user_id)
-        slack_events = [[{'type': 'message', 'text': 'What?', 'channel': self.channel, 'user': self.user_id}]]
+        slack_events = [[{
+            'type': 'message',
+            'text': 'What?',
+            'channel': self.channel,
+            'user': self.user_id
+        }]]
         slack_mock().rtm_read = Mock(side_effect=slack_events)
         user_info = {'ok': False, 'user_not_found': user_not_found}
         user_info_mock = Mock(name='users.info', return_value=user_info)
         post_message_mock = Mock(name='chat.postMessage')
-        slack_mock().api_call = _slack_api_call_builder({'users.info': user_info_mock, 'chat.postMessage': post_message_mock})
+        slack_mock().api_call = _slack_api_call_builder({
+            'users.info': user_info_mock,
+            'chat.postMessage': post_message_mock
+        })
         gz_chat_mock = Mock(name='godzillops.Chat')
-        gz_chat_mock().respond = Mock(return_value=resp_generator(('Huh?',)))
+        gz_chat_mock().respond = Mock(return_value=resp_generator(('Huh?', )))
 
         with patch('slackclient.SlackClient', slack_mock):
             with patch('godzillops.Chat', gz_chat_mock):
@@ -209,19 +256,48 @@ class TestPlatforms(unittest.TestCase):
         self.config.PLATFORM = "slack"
 
         slack_mock = Mock(name='slackclient')
-        slack_events = [[{'type': 'message', 'text': 'What?', 'channel': self.channel, 'user': self.user_id}],
-                        [{'type': 'message', 'text': 'Huh?', 'channel': self.channel, 'user': self.config.SLACK_USER}],
-                        [{'type': 'message', 'text': 'Okay?', 'channel': self.channel, 'user': self.user_id}],
-                        [{'type': 'message', 'text': 'An error occurred - check the logs. Reinitializing GZ.', 'channel': self.channel, 'user': self.config.SLACK_USER}],
+        slack_events = [[{
+            'type': 'message',
+            'text': 'What?',
+            'channel': self.channel,
+            'user': self.user_id
+        }], [{
+            'type': 'message',
+            'text': 'Huh?',
+            'channel': self.channel,
+            'user': self.config.SLACK_USER
+        }], [{
+            'type': 'message',
+            'text': 'Okay?',
+            'channel': self.channel,
+            'user': self.user_id
+        }], [{
+            'type': 'message',
+            'text': 'An error occurred - check the logs. Reinitializing GZ.',
+            'channel': self.channel,
+            'user': self.config.SLACK_USER
+        }],
                         KeyboardInterrupt()]
         slack_mock().rtm_read = Mock(side_effect=slack_events)
-        user_info = {'ok': True, 'user': {'id': self.user_id, 'tz': 'America/Chicago',
-                                          'tz_label': 'Central Daylight Time', 'tz_offset': -18000}}
+        user_info = {
+            'ok': True,
+            'user': {
+                'id': self.user_id,
+                'tz': 'America/Chicago',
+                'tz_label': 'Central Daylight Time',
+                'tz_offset': -18000
+            }
+        }
         user_info_mock = Mock(name='users.info', return_value=user_info)
         post_message_mock = Mock(name='chat.postMessage')
-        slack_mock().api_call = _slack_api_call_builder({'users.info': user_info_mock, 'chat.postMessage': post_message_mock})
+        slack_mock().api_call = _slack_api_call_builder({
+            'users.info': user_info_mock,
+            'chat.postMessage': post_message_mock
+        })
         gz_chat_mock = Mock(name='godzillops.Chat')
-        gz_chat_mock().respond = Mock(side_effect=[resp_generator(('Huh?',)), resp_generator((ValueError('BOOM'),))])
+        gz_chat_mock().respond = Mock(
+            side_effect=[resp_generator((
+                'Huh?', )), resp_generator((ValueError('BOOM'), ))])
 
         with patch('slackclient.SlackClient', slack_mock):
             with patch('godzillops.Chat', gz_chat_mock):
@@ -232,11 +308,22 @@ class TestPlatforms(unittest.TestCase):
         self.assertTrue(slack_mock().rtm_connect.called)
         self.assertTrue(slack_mock().rtm_read.called)
         user_info_mock.assert_called_with(user=self.user_id)
-        context = {'user': {'tz_label': 'Central Daylight Time', 'tz': 'America/Chicago', 'id': self.user_id, 'tz_offset': -18000}}
+        context = {
+            'user': {
+                'tz_label': 'Central Daylight Time',
+                'tz': 'America/Chicago',
+                'id': self.user_id,
+                'tz_offset': -18000
+            }
+        }
         gz_chat_mock().respond.assert_has_calls((call('What?', context=context),
                                                  call('Okay?', context=context)))
-        post_message_mock.assert_has_calls((call(text='Huh?', channel=self.channel, as_user=True),
-                                            call(text='An error occurred - check the logs. Reinitializing GZ.', channel=self.channel, as_user=True)))
+        post_message_mock.assert_has_calls(
+            (call(text='Huh?', channel=self.channel, as_user=True),
+             call(
+                 text='An error occurred - check the logs. Reinitializing GZ.',
+                 channel=self.channel,
+                 as_user=True)))
         self.logging_mock.exception.assert_called_with("Error generated responding to < Okay? >.")
 
     def test_007_slack_open_im_channel_dies(self):
@@ -247,20 +334,38 @@ class TestPlatforms(unittest.TestCase):
 
         slack_mock = Mock(name='slackclient')
         user_not_found = 'User {} not found'.format(other_user_id)
-        slack_events = [[{'type': 'message', 'text': 'What?', 'channel': self.channel, 'user': self.user_id}],
+        slack_events = [[{
+            'type': 'message',
+            'text': 'What?',
+            'channel': self.channel,
+            'user': self.user_id
+        }],
                         KeyboardInterrupt()]
         slack_mock().rtm_read = Mock(side_effect=slack_events)
-        user_info = {'ok': True, 'user': {'id': self.user_id, 'tz': 'America/Chicago',
-                                          'tz_label': 'Central Daylight Time', 'tz_offset': -18000}}
+        user_info = {
+            'ok': True,
+            'user': {
+                'id': self.user_id,
+                'tz': 'America/Chicago',
+                'tz_label': 'Central Daylight Time',
+                'tz_offset': -18000
+            }
+        }
         user_info_mock = Mock(name='users.info', return_value=user_info)
         im_open = {'user_not_found': user_not_found, 'ok': False}
         im_open_mock = Mock(name='im.open', return_value=im_open)
         post_message_mock = Mock(name='chat.postMessage')
-        slack_mock().api_call = _slack_api_call_builder({'users.info': user_info_mock,
-                                                         'im.open': im_open_mock,
-                                                         'chat.postMessage': post_message_mock})
+        slack_mock().api_call = _slack_api_call_builder({
+            'users.info': user_info_mock,
+            'im.open': im_open_mock,
+            'chat.postMessage': post_message_mock
+        })
         gz_chat_mock = Mock(name='godzillops.Chat')
-        gz_chat_mock().respond = Mock(return_value=resp_generator(({'admin_action_complete': True, 'message': 'Admin Command completed.'},)))
+        gz_chat_mock().respond = Mock(
+            return_value=resp_generator(({
+                'admin_action_complete': True,
+                'message': 'Admin Command completed.'
+            }, )))
 
         with patch('slackclient.SlackClient', slack_mock):
             with patch('godzillops.Chat', gz_chat_mock):
@@ -274,7 +379,10 @@ class TestPlatforms(unittest.TestCase):
         im_open_mock.assert_called_with(user=other_user_id)
         self.logging_mock.exception.assert_called_with("Error generated responding to < What? >.")
         self.assertTrue(gz_chat_mock().respond.called)
-        post_message_mock.assert_called_with(text='An error occurred - check the logs. Reinitializing GZ.', channel=self.channel, as_user=True)
+        post_message_mock.assert_called_with(
+            text='An error occurred - check the logs. Reinitializing GZ.',
+            channel=self.channel,
+            as_user=True)
 
 
 if __name__ == '__main__':
