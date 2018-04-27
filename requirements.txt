@@ -1,2 +1,2 @@
-git+ssh://git@github.com/statmuse/godzillops.git
+git+https://github.com/statmuse/godzillops.git
 slackclient==1.0.0

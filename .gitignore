@@ -3,6 +3,8 @@
 
 # Private Settings
 config_private.py
+welcome_attachments
+buildspec.yml
 
 # Test stuff
 .coverage
