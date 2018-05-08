@@ -52,12 +52,12 @@ clean-test:
 	$(RM) htmlcov
 
 install: clean
-	pyenv virtualenv 3.4.3 tokyo
+	pyenv virtualenv 3.6.5 tokyo
 	pip install --upgrade -r requirements.txt
 	python -m nltk.downloader brown
 
 install-dev: clean
-	pyenv virtualenv 3.4.3 tokyo
+	pyenv virtualenv 3.6.5 tokyo
 	pip install --upgrade -r requirements_dev.txt
 	python -m nltk.downloader brown
 
