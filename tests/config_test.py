@@ -1,4 +1,5 @@
 import logging
+
 LOG_LEVEL = logging.DEBUG
 PLATFORM = "text"
 SLACK_TOKEN = "xoxb-12345678910-asdfasdfasdfasdfasdfasdf"

@@ -32,42 +32,42 @@ SLACK_USER_ID = "U12345678"
 # Paste the contents of the file here as a python dictionary.
 GOOGLE_SERVICE_ACCOUNT_JSON = {}
 # Email of super admin to act on the behalf of
-GOOGLE_SUPER_ADMIN = 'admin@example.com'
+GOOGLE_SUPER_ADMIN = "admin@example.com"
 # Google Group Mapping. These should be the left side of the google group's
 # email address - i.e. dev of dev@example.com. GDES & GDEV are labels for
 # designer sounding or developer sounding titles (respectively). If all parts
 # of a job title make sense for this kind of label, Godzillops auto assigns groups upon user creation.
-GOOGLE_GROUPS = {'GDES': ['design'], 'GDEV': ['dev'], 'GCRE': ['creatives'], 'GFOU': ['founders']}
-GOOGLE_DEV_ROLES = ['backend', 'frontend']
+GOOGLE_GROUPS = {"GDES": ["design"], "GDEV": ["dev"], "GCRE": ["creatives"], "GFOU": ["founders"]}
+GOOGLE_DEV_ROLES = ["backend", "frontend"]
 # Main company calendar to add new google users to as readers
-GOOGLE_CALENDAR_ID = 'cal-id@group.calendar.google.com'
+GOOGLE_CALENDAR_ID = "cal-id@group.calendar.google.com"
 # Custom Welcome email text that can be configured
-GOOGLE_WELCOME_TEXT = ''
+GOOGLE_WELCOME_TEXT = ""
 GOOGLE_WELCOME_ATTACHMENTS = []
 
 # === TRELLO ===
 # Org ID or name
-TRELLO_ORG = 'yourorg'
+TRELLO_ORG = "yourorg"
 # Get this key from https://trello.com/app-key
-TRELLO_API_KEY = 'yourkey'
+TRELLO_API_KEY = "yourkey"
 # Generate a token via an API call - http://stackoverflow.com/questions/17178907/how-to-get-a-permanent-user-token-for-writes-using-the-trello-api
-TRELLO_TOKEN = 'yourtoken'
+TRELLO_TOKEN = "yourtoken"
 
 # === GITHUB ===
 # Org ID or name
-GITHUB_ORG = 'yourorg'
+GITHUB_ORG = "yourorg"
 # Generate a token - https://developer.github.com/v3/oauth_authorizations/#create-a-new-authorization
 # The necessary oauth scopes are: admin:org
 # Curl example: curl -u githubuser -X POST --data '{"scopes":["admin:org"], "note": "godzillops"}' https://api.github.com/authorizations
-GITHUB_ACCESS_TOKEN = 'yourtoken'
+GITHUB_ACCESS_TOKEN = "yourtoken"
 # Dev roles with teams to invite new members to. Get this id by running `GET /orgs/:org/teams` and
 # selecting the team ids you want to use
-GITHUB_DEV_ROLES = {'backend': [1234567, 8901234], 'frontend': [1234567]}
+GITHUB_DEV_ROLES = {"backend": [1234567, 8901234], "frontend": [1234567]}
 # Currently, GZ supports adding abacus users by posting to a Zapier webhook that is configured to
 # fire the 'Invite New User' Abacus action.
-ABACUS_ZAPIER_WEBHOOK = 'https://hooks.zapier.com/hooks/catch/asdf'
+ABACUS_ZAPIER_WEBHOOK = "https://hooks.zapier.com/hooks/catch/asdf"
 
-if os.path.exists('config_private.py'):
+if os.path.exists("config_private.py"):
     # Use config_private for your own personal settings - default to be git ignored.
     # Yup, intentionally using wildcard import to shadow the default values
     from config_private import *

@@ -19,11 +19,11 @@ def get_user_info(sc, user_id):
     Returns:
         dict: If response was successful, a dictionary containing a User ID's name & timezone.
     """
-    response = sc.api_call('users.info', user=user_id)
-    if response['ok']:
-        return response['user']
+    response = sc.api_call("users.info", user=user_id)
+    if response["ok"]:
+        return response["user"]
     else:
-        raise ValueError('Getting user information died: ' + str(response))
+        raise ValueError("Getting user information died: " + str(response))
 
 
 @lru_cache(maxsize=32)
@@ -38,17 +38,17 @@ def open_im_channel(sc, user_id):
     Returns:
         str: If response was successful, the direct message channel id for a user & the bot.
     """
-    response = sc.api_call('im.open', user=user_id)
-    if response['ok']:
-        return response['channel']['id']
+    response = sc.api_call("im.open", user=user_id)
+    if response["ok"]:
+        return response["channel"]["id"]
     else:
-        raise ValueError('Opening im channel died: ' + str(response))
+        raise ValueError("Opening im channel died: " + str(response))
 
 
 def main(config):
     gz_chat = Chat(config)
-    if not config.SLACK_TOKEN or config.SLACK_TOKEN == 'yourtoken':
-        sys.exit('Exiting... SLACK_TOKEN was empty or not updated from the default in config.py.')
+    if not config.SLACK_TOKEN or config.SLACK_TOKEN == "yourtoken":
+        sys.exit("Exiting... SLACK_TOKEN was empty or not updated from the default in config.py.")
 
     sc = SlackClient(config.SLACK_TOKEN)
 
@@ -59,50 +59,57 @@ def main(config):
             while True:
                 events = sc.rtm_read()
                 for event in events:
-                    response_required = all([
-                        event['type'] == 'message',
-                        event.get('text'),
-                        event.get('user') != config.SLACK_USER
-                    ])
+                    response_required = all(
+                        [
+                            event["type"] == "message",
+                            event.get("text"),
+                            event.get("user") != config.SLACK_USER,
+                        ]
+                    )
 
                     if response_required:
                         logging.debug(event)
-                        user = get_user_info(sc, event['user'])
-                        text = event.pop('text')
-                        responses = gz_chat.respond(text, context={'user': user})
+                        user = get_user_info(sc, event["user"])
+                        text = event.pop("text")
+                        responses = gz_chat.respond(text, context={"user": user})
                         try:
                             for response in responses:
                                 if isinstance(response, str):
                                     # Text is just feedback/chat from GZ
                                     sc.api_call(
                                         "chat.postMessage",
-                                        channel=event['channel'],
+                                        channel=event["channel"],
                                         as_user=True,
-                                        text=response)
+                                        text=response,
+                                    )
                                 elif isinstance(response, dict):
                                     # A dictionary represents a completed action (successful or failed)
-                                    if response['admin_action_complete']:
-                                        other_admins = [a for a in config.ADMINS if a != user['id']]
+                                    if response["admin_action_complete"]:
+                                        other_admins = [a for a in config.ADMINS if a != user["id"]]
                                         for admin_id in other_admins:
                                             logging.info(
-                                                "Admin action completed - informing admin user {}".
-                                                format(admin_id))
+                                                "Admin action completed - informing admin user {}".format(
+                                                    admin_id
+                                                )
+                                            )
                                             dm_channel = open_im_channel(sc, admin_id)
                                             sc.api_call(
                                                 "chat.postMessage",
                                                 channel=dm_channel,
                                                 as_user=True,
-                                                text=response['message'])
+                                                text=response["message"],
+                                            )
                         except:
                             logging.exception("Error generated responding to < {} >.".format(text))
                             sc.api_call(
                                 "chat.postMessage",
-                                channel=event['channel'],
+                                channel=event["channel"],
                                 as_user=True,
-                                text="An error occurred - check the logs. Reinitializing GZ.")
+                                text="An error occurred - check the logs. Reinitializing GZ.",
+                            )
                             gz_chat = Chat(config)
                 time.sleep(1)
         else:
-            logging.error('Connecting to Slack failed... make sure the token is valid.')
+            logging.error("Connecting to Slack failed... make sure the token is valid.")
     except (KeyboardInterrupt):
         logging.info("Exiting...")
