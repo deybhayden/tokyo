@@ -42,7 +42,7 @@ slackclient==1.0.0
 toml==0.9.4
 traitlets==4.3.2
 uritemplate==0.6
-urllib3==1.22
+urllib3==1.23
 urwid==2.0.1
 wcwidth==0.1.7
 websocket-client==0.47.0
